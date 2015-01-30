@@ -18,7 +18,7 @@ public class FileUtils {
         BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
         String line;
         int cols = reader.readLine().split(",").length;
-        int rows = FileUtils.getTotalLines(path) - 1;        // -1 beaus first line is labels
+        int rows = FileUtils.getTotalLines(path) - 1;        // -1 because first line is labels
 
         double[][] mat_x = new double[rows][cols];
         double[][] mat_y = new double[rows][1];
@@ -41,7 +41,7 @@ public class FileUtils {
         String[] ele = line.split(",");
         mat_x[index][0] = 1;
         for(int i = 1; i < cols_length; i++){
-            mat_x[index][i] = Float.parseFloat(ele[i - 1]);
+            mat_x[index][i] = Double.parseDouble(ele[i - 1]);
         }
 
         mat_y[index][0] = Double.parseDouble(ele[cols_length - 1]);
@@ -68,7 +68,11 @@ public class FileUtils {
 
     }
 
-
+    /**
+     * split files into 3 different files
+     * @param input
+     * @throws IOException
+     */
     public static void split_file(String input) throws IOException {
         BufferedReader reader = new BufferedReader(new FileReader(input));
         String line = null;
