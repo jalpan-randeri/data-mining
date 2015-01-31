@@ -9,7 +9,7 @@ public class RandomUtils {
 
     /**
      * fill the array with natural series starting with 0
-     * @param data
+     * @param data Arrays of integer
      */
     public static void fillSeries(int[] data){
         for(int i = 0; i < data.length; i++){
@@ -30,6 +30,12 @@ public class RandomUtils {
         }
     }
 
+    /**
+     * swap the two numbers
+     * @param indexes Arrays of intergers
+     * @param src Source index
+     * @param tar Target index
+     */
     private static void swap(int[] indexes, int src, int tar) {
         int temp = indexes[src];
         indexes[src] = indexes[tar];

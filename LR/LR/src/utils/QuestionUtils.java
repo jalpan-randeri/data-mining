@@ -4,6 +4,8 @@ import Jama.Matrix;
 import model.Question;
 
 /**
+ * Utilities methods for modifiying Questions Object
+ *
  * Created by jalpanranderi on 1/30/15.
  */
 public class QuestionUtils {

@@ -6,6 +6,8 @@ import utils.FileUtils;
 import java.io.*;
 
 /**
+ * Question 1
+ *
  * Created by jalpanranderi on 1/25/15.
  */
 public class LinearRegressionL2 {
@@ -37,10 +39,14 @@ public class LinearRegressionL2 {
     }
 
 
-
-
-
-
+    /**
+     * learn from the input file and return the test result specified the
+     * test in the given test file
+     * @param input_file String representing path of input learning data
+     * @param test_file String representing path of the test data
+     * @return String representing the test results
+     * @throws IOException
+     */
     private static String learn(String input_file, String test_file) throws IOException {
         Question input = FileUtils.read_file(input_file);
         Question test = FileUtils.read_file(test_file);
@@ -50,8 +56,8 @@ public class LinearRegressionL2 {
         for(int lambda = 0; lambda <= 150; lambda++) {
             Matrix w = calculate_Weights(input, lambda);
 
-            double E_in = getError(input.mat_x, input.mat_y, w);
-            double E_out = getError(test.mat_x, test.mat_y, w);
+            double E_in = getMeanSquareError(input.mat_x, input.mat_y, w);
+            double E_out = getMeanSquareError(test.mat_x, test.mat_y, w);
 
             System.out.printf("%.4f \t %.4f\n", E_in, E_out);
 
@@ -61,15 +67,28 @@ public class LinearRegressionL2 {
         return builder.toString();
     }
 
-    public static double getError(Matrix mat_x, Matrix mat_y, Matrix w) {
+    /**
+     * returns Mean square error for the given matrix
+     * @param mat_x Matrix X
+     * @param mat_y Matrix Y
+     * @param w Matrix W
+     * @return Double representing means square error
+     */
+    public static double getMeanSquareError(Matrix mat_x, Matrix mat_y, Matrix w) {
 
-        Matrix y_calcuate = mat_x.times(w);
-        Matrix result = y_calcuate.minus(mat_y);
+        Matrix y_calculate = mat_x.times(w);
+        Matrix result = y_calculate.minus(mat_y);
 
         result = result.transpose().times(result);
         return result.det()/mat_x.getRowDimension();
     }
 
+    /**
+     * returns the Weight matrix
+     * @param input Matrix X and Matrix Y as Question input
+     * @param lambda Integer representing lambda as penalty
+     * @return Weight Matrix representing the weights for the given system
+     */
     public static Matrix calculate_Weights(Question input, int lambda) {
         Matrix x_transpose = input.mat_x.transpose();
 

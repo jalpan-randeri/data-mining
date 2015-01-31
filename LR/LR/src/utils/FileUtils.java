@@ -6,11 +6,18 @@ import model.Question;
 import java.io.*;
 
 /**
+ * File utilises for parsing input files
+ *
  * Created by jalpanranderi on 1/25/15.
  */
 public class FileUtils {
 
-
+    /**
+     * Reads the input file and convert into matrix
+     * @param path String representing the input data file
+     * @return Question object contains Matrix X, Y
+     * @throws IOException
+     */
     public static Question read_file(String path) throws IOException {
 
         Question question = new Question();
@@ -37,6 +44,15 @@ public class FileUtils {
         return question;
     }
 
+
+    /**
+     * fill the matrix using the given double[][] array of x and y
+     * @param mat_x 2-D arrays of double for X
+     * @param mat_y 2-D arrays of double for Y
+     * @param line  String representing the reading line
+     * @param index Index of the current position in matrix
+     * @param cols_length Length of the row in Matrix X
+     */
     private static void fill_matrix(double[][] mat_x, double[][] mat_y, String line, int index, int cols_length) {
         String[] ele = line.split(",");
         mat_x[index][0] = 1;
@@ -47,6 +63,12 @@ public class FileUtils {
         mat_y[index][0] = Double.parseDouble(ele[cols_length - 1]);
     }
 
+    /**
+     * Determine the total number of lines in a file
+     * @param path String representing the file
+     * @return Integer representing the total number of lines in file
+     * @throws IOException
+     */
     private static int getTotalLines(String path) throws IOException {
         LineNumberReader lnr = new LineNumberReader(new FileReader(new File(path)));
         lnr.skip(Long.MAX_VALUE);
@@ -59,10 +81,16 @@ public class FileUtils {
     }
 
 
-    public static void writeFile(String line, String file_name) throws FileNotFoundException {
+    /**
+     * Create a file using the given String
+     * @param contents String representing contents of the file
+     * @param file_name String representing the output file path
+     * @throws FileNotFoundException
+     */
+    public static void writeFile(String contents, String file_name) throws FileNotFoundException {
         PrintWriter writer = new PrintWriter(file_name);
 
-        writer.print(line);
+        writer.print(contents);
 
         writer.close();
 
