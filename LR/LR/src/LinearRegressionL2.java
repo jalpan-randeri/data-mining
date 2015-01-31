@@ -6,8 +6,6 @@ import utils.FileUtils;
 import java.io.*;
 
 /**
- * Question 1
- *
  * Created by jalpanranderi on 1/25/15.
  */
 public class LinearRegressionL2 {
@@ -85,13 +83,12 @@ public class LinearRegressionL2 {
 
     /**
      * returns the Weight matrix
-     * @param input Matrix X and Matrix Y as Question input
+     * @param input Matrix X and Matrix Y as Quesiton input
      * @param lambda Integer representing lambda as penalty
-     * @return Weight Matrix representing the weights for the given system
+     * @return Matrix representing the weights
      */
     public static Matrix calculate_Weights(Question input, int lambda) {
         Matrix x_transpose = input.mat_x.transpose();
-
         Matrix x_transpose_x = x_transpose.times(input.mat_x);
 
         Matrix mat_lambda = Matrix.identity(x_transpose_x.getRowDimension(), x_transpose_x.getColumnDimension()).times(lambda);

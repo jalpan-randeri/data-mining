@@ -12,9 +12,25 @@ import java.io.IOException;
 public class CrossValidationLinearRegressing {
 
     public static void main(String[] args) throws IOException {
-        int lambda = getLambdaUsingCrossValidation(FileConts.FILE_3);
 
-        System.out.println("Best Lambda is "+lambda);
+        int lambda = getLambdaUsingCrossValidation(FileConts.FILE_1);
+        System.out.println("File1 Best Lambda is "+lambda);
+
+
+
+        lambda = getLambdaUsingCrossValidation(FileConts.FILE_2);
+
+        System.out.println("File 2 Best Lambda is "+lambda);
+
+
+
+
+        lambda = getLambdaUsingCrossValidation(FileConts.FILE_3);
+        System.out.println("File 3 Best Lambda is "+lambda);
+
+
+
+
     }
 
 
@@ -43,8 +59,6 @@ public class CrossValidationLinearRegressing {
             }
 
             error = error / set.length;
-
-            System.out.println("Error is "+error);
 
             if(error < min_error_rate){
                 min_error_rate = error;

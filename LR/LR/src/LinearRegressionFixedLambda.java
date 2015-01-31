@@ -16,7 +16,7 @@ public class LinearRegressionFixedLambda {
 
     public static void main(String[] args) throws IOException {
 
-        learn(FileConts.FILE_3, FileConts.TEST_2);
+        learn(FileConts.FILE_3, FileConts.TEST_3);
 
     }
 
