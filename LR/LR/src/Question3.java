@@ -9,7 +9,7 @@ import java.io.IOException;
 /**
  * Created by jalpanranderi on 1/30/15.
  */
-public class CrossValidationLinearRegressing {
+public class Question3 {
 
     public static void main(String[] args) throws IOException {
 
@@ -23,11 +23,20 @@ public class CrossValidationLinearRegressing {
         System.out.println("File 2 Best Lambda is "+lambda);
 
 
-
-
         lambda = getLambdaUsingCrossValidation(FileConts.FILE_3);
         System.out.println("File 3 Best Lambda is "+lambda);
 
+
+        lambda = getLambdaUsingCrossValidation(FileConts.FILE_4);
+        System.out.println("File 4 Best Lambda is "+lambda);
+
+
+        lambda = getLambdaUsingCrossValidation(FileConts.FILE_5);
+        System.out.println("File 5 Best Lambda is "+lambda);
+
+
+        lambda = getLambdaUsingCrossValidation(FileConts.FILE_6);
+        System.out.println("File 6 Best Lambda is "+lambda);
 
 
 
@@ -42,7 +51,9 @@ public class CrossValidationLinearRegressing {
      * @throws IOException
      */
     public static int getLambdaUsingCrossValidation(String file_path) throws IOException {
+
         Question input = FileUtils.read_file(file_path);
+
         int k = 10;
         InputTestSet set[] = partiation_set(input, k);
 
@@ -54,8 +65,8 @@ public class CrossValidationLinearRegressing {
         for(int lambda = 0; lambda <= 150; lambda++) {
 
             double error = 0;
-            for (int i = 0; i < set.length; i++) {
-                error = error + getError(set[i], lambda);
+            for (InputTestSet aSet : set) {
+                error = error + getError(aSet, lambda);
             }
 
             error = error / set.length;
@@ -91,7 +102,7 @@ public class CrossValidationLinearRegressing {
      * @return Double representing error
      */
     private static double determineError(Matrix mat_x, Matrix w, Matrix mat_y) {
-        return LinearRegressionL2.getMeanSquareError(mat_x, mat_y, w);
+        return L2RegularizedLinearRegression.getMeanSquareError(mat_x, mat_y, w);
     }
 
     /**
@@ -106,7 +117,7 @@ public class CrossValidationLinearRegressing {
         input.mat_x = mat_x;
         input.mat_y = mat_y;
 
-        return LinearRegressionL2.calculate_Weights(input, lambda);
+        return L2RegularizedLinearRegression.calculate_Weights(input, lambda);
     }
 
     /**

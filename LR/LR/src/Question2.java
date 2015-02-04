@@ -12,7 +12,7 @@ import java.io.IOException;
  *
  * Created by jalpanranderi on 1/30/15.
  */
-public class LinearRegressionFixedLambda {
+public class Question2 {
 
     public static void main(String[] args) throws IOException {
 
@@ -62,9 +62,9 @@ public class LinearRegressionFixedLambda {
             int iteration_size = 50;
             for(int j = 0; j <  iteration_size; j++) {
                 Question random = QuestionUtils.generateMatrixOfSize(input, i);
-                Matrix w = LinearRegressionL2.calculate_Weights(random, lambda);
-                double E_in = LinearRegressionL2.getMeanSquareError(random.mat_x, random.mat_y, w);
-                double E_out = LinearRegressionL2.getMeanSquareError(test.mat_x, test.mat_y, w);
+                Matrix w = L2RegularizedLinearRegression.calculate_Weights(random, lambda);
+                double E_in = L2RegularizedLinearRegression.getMeanSquareError(random.mat_x, random.mat_y, w);
+                double E_out = L2RegularizedLinearRegression.getMeanSquareError(test.mat_x, test.mat_y, w);
 
                 final_E_in = final_E_in + E_in;
                 final_E_out = final_E_out + E_out;
