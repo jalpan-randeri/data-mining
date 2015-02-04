@@ -7,6 +7,10 @@ import utils.FileUtils;
 import java.io.IOException;
 
 /**
+ *
+ * Cross Validation implementation to determine correct lambda
+ * for the given input set for L2 Regularized Linear Regression
+ *
  * Created by jalpanranderi on 1/30/15.
  */
 public class Question3 {
@@ -15,8 +19,6 @@ public class Question3 {
 
         int lambda = getLambdaUsingCrossValidation(FileConts.FILE_1);
         System.out.println("File1 Best Lambda is "+lambda);
-
-
 
         lambda = getLambdaUsingCrossValidation(FileConts.FILE_2);
 

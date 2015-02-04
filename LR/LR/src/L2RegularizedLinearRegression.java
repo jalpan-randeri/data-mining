@@ -2,6 +2,9 @@ import Jama.Matrix;
 import model.Question;
 
 /**
+ *
+ * L2 Regularized Linear Regression
+ *
  * Created by jalpanranderi on 2/3/15.
  */
 public class L2RegularizedLinearRegression {

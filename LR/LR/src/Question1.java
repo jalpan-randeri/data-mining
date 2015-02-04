@@ -2,19 +2,22 @@ import Jama.Matrix;
 import conts.FileConts;
 import model.Question;
 import utils.FileUtils;
-import utils.L2RegularizedLinearRegression;
 
 import java.io.*;
 
 /**
+ * Generate Ein and Eout error for the given data set
+ * for L2 Regularized Linear Regression
+ *
  * Created by jalpanranderi on 1/25/15.
  */
 public class Question1 {
 
 
-
-
     public static void main(String[] args) throws IOException {
+
+        //TODO: enable command line input
+
         String output = performLinearRegression(FileConts.FILE_1, FileConts.TEST_1);
         FileUtils.writeFile(output, "output_100-10.csv");
 

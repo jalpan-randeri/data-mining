@@ -10,11 +10,15 @@ import java.io.IOException;
  *
  * Question 2
  *
+ * L2 Regularized Linear Regression using lambda values
+ *
  * Created by jalpanranderi on 1/30/15.
  */
 public class Question2 {
 
     public static void main(String[] args) throws IOException {
+
+        //TODO: enable command line arguments
 
         learn(FileConts.FILE_3, FileConts.TEST_3);
 
