@@ -1,6 +1,8 @@
 package model;
 
 /**
+ * Question representing the model of the input and test data
+ *
  * Created by jalpanranderi on 2/16/15.
  */
 public class Question {

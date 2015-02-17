@@ -6,39 +6,59 @@ import java.io.IOException;
 import java.util.*;
 
 /**
+ * KNN is K Nearest Neighbour classifier Algorithm Implementation
+ *
  * Created by jalpanranderi on 2/16/15.
  */
 public class KNN {
     public static void main(String[] args) throws IOException {
 
-        if(args.length == 3) {
-//            System.out.println("Training Set");
+        if(args.length == 2) {
             Question[] input = FileUtils.readFile(args[0]);
-//            System.out.println("Testing Set");
             Question[] test = FileUtils.readFile(args[1]);
-            int[] k = new int[1];
-            k[0] = Integer.parseInt(args[2]);
-//            k[1] = Integer.parseInt(args[3]);
-//            k[2] = Integer.parseInt(args[4]);
-//            k[3] = Integer.parseInt(args[5]);
-//            k[4] = Integer.parseInt(args[6]);
+            int[] k = {1,3,5,7,9};
 
-            performKNN(input, test, k);
+            String prediction = performKNN(input, test, k);
+            FileUtils.writeFile(prediction, "prediction.txt");
 
         }else{
-            System.out.println("Usage KNN <train_file>  <test_file>  <k>");
+            System.out.println("Usage KNN <train_file>  <test_file>");
         }
     }
 
-    private static void performKNN(Question[] input, Question[] test, int[] k) {
+    /**
+     * perfromKNN will run the K-nearest neighbours algorithm and determine the
+     * unknown value from the learning data
+     * @param input Question[] set of inputs as training data
+     * @param test Question[] set of test as testing data
+     * @param k Integer[] array list of k
+     * @return String representing the prediction
+     */
+    private static String performKNN(Question[] input, Question[] test, int[] k) {
+        StringBuilder builder = new StringBuilder();
+
+
         for (Question aTest : test) {
-            String prediction = getPrediction(aTest, input, k);
-            System.out.printf("%.2f,%.2f,%.2f,%.2f,%s\n", aTest.mDatapoints[0],
-                    aTest.mDatapoints[1], aTest.mDatapoints[2], aTest.mDatapoints[3], prediction);
-
+            String label = getPrediction(aTest, input, k);
+//            System.out.printf("%.2f,%.2f,%.2f,%.2f,%s\n", aTest.mDatapoints[0],
+//                    aTest.mDatapoints[1], aTest.mDatapoints[2], aTest.mDatapoints[3], label);
+            String prediction  = String.format("%.2f,%.2f,%.2f,%.2f,%s\n", aTest.mDatapoints[0],
+                    aTest.mDatapoints[1], aTest.mDatapoints[2], aTest.mDatapoints[3], label);
+            builder.append(prediction);
         }
+
+        return builder.toString();
     }
 
+    /**
+     * getPrediction will predict the class of the given unknown sample from the
+     * training samples
+     *
+     * @param test Question[] sets of Input as training data
+     * @param train Question unknown sample from test data
+     * @param k Integer[] representing number of neighbours we need to consider
+     * @return String representing the prediction class of the given sample
+     */
     private static String getPrediction(Question test, Question[] train, int[] k) {
 
         Prediction[] distances = new Prediction[train.length];
@@ -69,6 +89,13 @@ public class KNN {
         return builder.toString();
     }
 
+
+    /**
+     * determineLabel determine the most occurring label from the prediction set
+     * @param distances Predication[] representing the distance of the unknown sample to known samples
+     * @param k Integer representing the number of neighbours will affect the prediction
+     * @return String representing the label of the unknown sample
+     */
     private static String determineLabel(Prediction[] distances, int k) {
         HashMap<String, Integer> counts = new HashMap<String, Integer>();
 
@@ -83,6 +110,12 @@ public class KNN {
         return getMax(counts);
     }
 
+    /**
+     * getMax returns the label occurring maximum time
+     * @param counts HashMap representing the labels and their counts
+     * @return String representing the label
+     */
+
     private static String getMax(HashMap<String, Integer> counts) {
         String label = null;
         int count = 0;
@@ -96,6 +129,13 @@ public class KNN {
     }
 
 
+    /**
+     * getEuclideanDistance returns the distance between given two points
+     * @param inputPoints Double[] representing the sets of input points
+     * @param label String representing the label of the input point (known sample from training data)
+     * @param testPoints Double[] representing the sets of testpoints
+     * @return Prediction representing the distance and predicted label
+     */
     private static Prediction getEuclideanDistance(double[] inputPoints, String label, double[] testPoints){
         double ans = 0;
         for(int i = 0; i < inputPoints.length; i++){
