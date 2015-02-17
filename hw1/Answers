@@ -1,0 +1,63 @@
+Question 1
+
+** How does λ affect the MSE in general?
+-->  Lambda is reduces overfitting or the predicted model,
+hence as the lambda increase is reduces the MSE error in test data.
+but it adds bias to the model so it will increase the MSE error in training data.
+
+
+
+** How does the choice of λ depend on the number of features vs. examples?
+--> As the number of features are increasing the choice for optimal value for lambda also increases,
+because with more features the model will try to overfit the data to reduce this we need to add
+higer bias to model which will result into higher lambda value,
+This is observed in plot 100_10 vs 100_100.
+
+
+As the number of example increase the value of optimal lambda also increase,
+because, as the number of example increase the weight calculated using this examples
+try to predict as closely as possible, hence to reduce this overfitting we need to add more bias
+to the model which result into higher lambda value.
+This is observed in plot 100_100 and 100_1000.
+
+Hence, the general observation for lambda's value increases as the number of
+features increases or number of examples increase.
+
+
+
+
+
+** How does λ change with number of examples when the number of features is fixed?
+--> The value of lambda increase as the number of examples increase while,
+number of features remain fixed. Because, wight derived from the less examples will,
+have high variance to the model, henece as the number of example increase it try to
+fit as much data possible, this will overfit the data, so to reduce this overfittig,
+we need to introduce higher penalty to model, which reflect as higher lambda value.
+This is observed in 50(1000)_100 vs 100(10000)_100 vs 150(1000)_100.
+
+
+Question 3
+
+
+** How do the values for λ and MSE obtained from CV compare to the ones in question 1?
+--> The value of MSE is an average value of k iteration of k different folds for each lambda.
+based on this list of MSE the lowest value is chosen and for the corosponding lambda value.
+
+Now we use this lambda value and determine the weight for the entire dataset, and then based on
+this we will find the Mean Square Error for test data and training data.
+
+
+** What are the drawbacks of CV?
+-->
+The main drawback of Cross Validation is we need to rerun K times the from the scratch.
+The other limitation of Cross Validation is it gives meaningful result,
+if the test data and training data are derived from the same population.
+Besides this if the system experience changes over time which results into change of behavior
+then predictive model is no longer valid for the given system, so we need to re run cross validation.
+so crossvalidation can not responds to changes.
+
+
+** What are the factors affecting the performance of CV?
+-->  The mainly two factors affecting the performance of Cross Validation.
+ 1. total is number of folds we choose.
+ 2. total number of samples in testing vs total number of samples training set on each fold.
