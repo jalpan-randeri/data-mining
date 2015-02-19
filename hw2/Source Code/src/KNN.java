@@ -1,3 +1,4 @@
+import comparators.PredictorComparator;
 import model.MinMax;
 import model.Prediction;
 import model.Question;
@@ -13,36 +14,31 @@ import java.util.*;
  */
 public class KNN {
 
-
-
-
-
     public static void main(String[] args) throws IOException {
 
         if(args.length == 2) {
             Question[] input = FileUtils.readFile(args[0], true);
             Question[] test = FileUtils.readFile(args[1], false);
 
-
-
-
-
-
-
-//            Question t = new Question();
-//            t.mDatapoints = new double[] {4.4,3.2,1.3,0.2};
-//            t.mTestLabel = "x2";
-//
-//            Question[]  test = {t};
-
             int[] k = {1,3,5,7,9};
 
             MinMax[] minMaxes = normalizedData(input);
 
 
+            String header = "@relation HW1_TEST\n" +
+                    "\n" +
+                    "@attribute sepal_length real\n" +
+                    "@attribute sepal_width real\n" +
+                    "@attribute petal_length real\n" +
+                    "@attribute petal_width real\n" +
+                    "%attribute ExampleID\n" +
+                    "\n" +
+                    "@data\n";
 
             String prediction = performKNN(input, test, k, minMaxes);
-            FileUtils.writeFile(prediction, "prediction.txt");
+
+            FileUtils.writeFile(header+prediction, "prediction.arff");
+            System.out.println("Prediction file generated: prediction.arff");
 
         }else{
             System.out.println("Usage KNN <train_file>  <test_file>");
@@ -52,7 +48,12 @@ public class KNN {
 
     }
 
-
+    /**
+     * getArray extract the array from the data set
+     * @param data Question[] representing the data set
+     * @param index Integer representing the extracted feature
+     * @return Double[] array of features from the data set
+     */
     private static double[] getArray(Question[] data, int index){
         double[] p = new double[data.length];
         for(int i = 0; i < data.length; i++){
@@ -62,6 +63,12 @@ public class KNN {
         return p;
     }
 
+    /**
+     * normalizedData normalized the data set
+     * @param input Question[] given data set
+     * @return MinMax[] representing the arrays of min and max for given features
+     *                  of data set
+     */
     private static MinMax[] normalizedData(Question[] input) {
 
         if(input.length == 1){
@@ -85,6 +92,11 @@ public class KNN {
         return mm;
     }
 
+    /**
+     * updateData changes the value of data set to normalized value
+     * @param mm MinMax[] representing features minimum and maximum values
+     * @param input Question[] given data set
+     */
     private static void updateData(MinMax[] mm, Question[] input) {
         for(int i = 0; i < input.length; i++){
             for(int p = 0; p < input[i].mDatapoints.length; p++){
@@ -110,21 +122,7 @@ public class KNN {
             distances[i] = getEuclideanDistance(train[i].mDatapoints, train[i].mLabel, test.mDatapoints, mm);
         }
 
-        Arrays.sort(distances, new Comparator<Prediction>() {
-            @Override
-            public int compare(Prediction p1, Prediction p2) {
-                double d = p1.mDistance - p2.mDistance;
-                if(d == 0){
-                    return 0;
-                }else if(d > 0){
-                    return 1;
-                }else{
-                    return -1;
-                }
-            }
-        });
-
-
+        Arrays.sort(distances, new PredictorComparator());
 
 //        System.out.println(Arrays.toString(distances));
 
@@ -219,7 +217,7 @@ public class KNN {
      * @param inputPoints Double[] representing the sets of input points
      * @param label String representing the label of the input point (known sample from training data)
      * @param testPoints Double[] representing the sets of testpoints
-     * @param mm MinMax[] represents the minimum and maximum points for the 
+     * @param mm MinMax[] represents the minimum and maximum points for the
      * @return Prediction representing the distance and predicted label
      */
     private static Prediction getEuclideanDistance(double[] inputPoints, String label, double[] testPoints, MinMax[] mm){
@@ -235,7 +233,11 @@ public class KNN {
         return prediction;
     }
 
-
+    /**
+     * getMinMax determine the minimum and maximum value of from the list
+     * @param data double[] array
+     * @return MinMax representing the minimum and maximum of the given array
+     */
     private static MinMax getMinMax(double[] data){
         double min = Double.MAX_VALUE;
         double max = Double.MIN_VALUE;
@@ -248,6 +250,13 @@ public class KNN {
         return new MinMax(min, max);
     }
 
+    /**
+     * getNormalizedValue calculate the normalized value for x
+     * @param x Double representing the sample
+     * @param x_min Double representing the minimum value
+     * @param x_max Double representing the maximum value
+     * @return Double normalized value
+     */
     private static double getNormalizedValue(double x, double x_min, double x_max){
         return (x - x_min)/(x_max - x_min);
     }
