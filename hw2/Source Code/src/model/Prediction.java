@@ -12,6 +12,6 @@ public class Prediction {
 
     @Override
     public String toString() {
-        return label;
+        return mDistance+"";
     }
 }

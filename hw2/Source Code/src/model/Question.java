@@ -8,6 +8,7 @@ package model;
 public class Question {
     public double[] mDatapoints;
     public String mLabel;
+    public String mTestLabel;
 
     @Override
     public String toString() {

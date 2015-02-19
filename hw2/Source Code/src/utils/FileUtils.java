@@ -14,10 +14,11 @@ public class FileUtils {
     /**
      * readFile reads the arff file and converts the file into Question models
      * @param path String representing the path of the file
+     * @param isTrainFile Boolean representing the train file
      * @return Question[] representing the model of data
      * @throws IOException when file not found or there is error in IO because of permissions
      */
-    public static Question[] readFile(String path) throws IOException {
+    public static Question[] readFile(String path, boolean isTrainFile) throws IOException {
         int size = getLineNumber(path);
         Question[] input = new Question[size];
         int index = 0;
@@ -27,7 +28,7 @@ public class FileUtils {
 
         while((line = reader.readLine()) != null){
             if(!isSkipable){
-                input[index] = parseLine(line);
+                input[index] = parseLine(line, isTrainFile);
                 index++;
             }else if(line.equals("@data")) {
                 isSkipable = false;
@@ -42,9 +43,10 @@ public class FileUtils {
     /**
      * parseLine parses the line and append the value into model
      * @param line String representing the actual text from the file
+     * @param isTrainFile Boolean representing the train file
      * @return Question model the line into Question
      */
-    private static Question parseLine(String line) {
+    private static Question parseLine(String line, boolean isTrainFile) {
         // 4 points 0-3
         // 1 label 4th index
         String[] contents = line.split(",");
@@ -58,7 +60,11 @@ public class FileUtils {
 
 
         if(contents.length > question.mDatapoints.length) {
-            question.mLabel = contents[question.mDatapoints.length];
+            if(!isTrainFile){
+                question.mTestLabel = contents[question.mDatapoints.length];
+            }else {
+                question.mLabel = contents[question.mDatapoints.length];
+            }
         }
 
         return question;
