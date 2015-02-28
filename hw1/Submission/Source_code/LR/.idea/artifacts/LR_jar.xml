@@ -1,9 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="jar" name="LR:jar">
-    <output-path>$PROJECT_DIR$/out/artifacts/LR_jar</output-path>
-    <root id="archive" name="LR.jar">
-      <element id="module-output" name="LR" />
-      <element id="extracted-dir" path="$PROJECT_DIR$/../Jama-1.0.3.zip" path-in-jar="/" />
-    </root>
-  </artifact>
-</component>
