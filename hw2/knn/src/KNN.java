@@ -1,7 +1,7 @@
 import comparators.PredictorComparator;
-import model.MinMax;
 import model.Prediction;
 import model.Question;
+import model.StdAvg;
 import utils.FileUtils;
 
 import java.io.IOException;
@@ -20,25 +20,21 @@ public class KNN {
             Question[] input = FileUtils.readFile(args[0], true);
             Question[] test = FileUtils.readFile(args[1], false);
 
+            Question[] test_copy = FileUtils.readFile(args[1], false);
+
             int[] k = {1,3,5,7,9};
 
-            MinMax[] minMaxes = normalizedData(input);
+            //StdAvg[] minMaxes =
+            normalizedData(input);
+            normalizedData(test);
 
 
-            String header = "@relation HW1_TEST\n" +
-                    "\n" +
-                    "@attribute sepal_length real\n" +
-                    "@attribute sepal_width real\n" +
-                    "@attribute petal_length real\n" +
-                    "@attribute petal_width real\n" +
-                    "%attribute ExampleID\n" +
-                    "\n" +
-                    "@data\n";
 
-            String prediction = performKNN(input, test, k, minMaxes);
 
-            FileUtils.writeFile(header+prediction, "prediction.arff");
-            System.out.println("Prediction file generated: prediction.arff");
+            String prediction = performKNN(input, test, k, test_copy);
+
+            FileUtils.writeFile(prediction, "prediction.csv");
+            System.out.println("Prediction file generated: prediction.csv");
 
         }else{
             System.out.println("Usage KNN <train_file>  <test_file>");
@@ -69,7 +65,7 @@ public class KNN {
      * @return MinMax[] representing the arrays of min and max for given features
      *                  of data set
      */
-    private static MinMax[] normalizedData(Question[] input) {
+    private static StdAvg[] normalizedData(Question[] input) {
 
         if(input.length == 1){
             return null;
@@ -80,10 +76,10 @@ public class KNN {
         double[] p2 = getArray(input, 2);
         double[] p3 = getArray(input, 3);
 
-        MinMax[] mm = { getMinMax(p0),
-                        getMinMax(p1),
-                        getMinMax(p2),
-                        getMinMax(p3) };
+        StdAvg[] mm = { getStdAvg(p0),
+                        getStdAvg(p1),
+                        getStdAvg(p2),
+                        getStdAvg(p3) };
 
 
         updateData(mm, input);
@@ -97,10 +93,10 @@ public class KNN {
      * @param mm MinMax[] representing features minimum and maximum values
      * @param input Question[] given data set
      */
-    private static void updateData(MinMax[] mm, Question[] input) {
+    private static void updateData(StdAvg[] mm, Question[] input) {
         for(int i = 0; i < input.length; i++){
             for(int p = 0; p < input[i].mDatapoints.length; p++){
-                input[i].mDatapoints[p] = getNormalizedValue(input[i].mDatapoints[p], mm[p].mMin, mm[p].mMax);
+                input[i].mDatapoints[p] = getNormalizedValue(input[i].mDatapoints[p], mm[p].mAvg, mm[p].mStd);
             }
         }
     }
@@ -115,11 +111,11 @@ public class KNN {
      * @param k Integer[] representing number of neighbours we need to consider
      * @return String representing the prediction class of the given sample
      */
-    private static String getPrediction(Question test, Question[] train, int[] k, MinMax[] mm) {
+    private static String getPrediction(Question test, Question[] train, int[] k) {
 
         Prediction[] distances = new Prediction[train.length];
         for(int i = 0; i < distances.length; i++){
-            distances[i] = getEuclideanDistance(train[i].mDatapoints, train[i].mLabel, test.mDatapoints, mm);
+            distances[i] = getEuclideanDistance(train[i].mDatapoints, train[i].mLabel, test.mDatapoints);
         }
 
         Arrays.sort(distances, new PredictorComparator());
@@ -142,18 +138,19 @@ public class KNN {
      * @param input Question[] set of inputs as training data
      * @param test Question[] set of test as testing data
      * @param k Integer[] array list of k
+     * @param test_copy
      * @return String representing the prediction
      */
-    private static String performKNN(Question[] input, Question[] test, int[] k, MinMax[] mm) {
+    private static String performKNN(Question[] input, Question[] test, int[] k, Question[] test_copy) {
         StringBuilder builder = new StringBuilder();
 
 
         for (int i = 0; i < test.length; i++){
-            String label = getPrediction(test[i], input, k, mm);
+            String label = getPrediction(test[i], input, k);
 
 
-            String prediction  = String.format("%1.1f,%1.1f,%1.1f,%1.1f,%s,%s\n", test[i].mDatapoints[0],
-                    test[i].mDatapoints[1], test[i].mDatapoints[2], test[i].mDatapoints[3], test[i].mTestLabel, label);
+            String prediction  = String.format("%1.1f,%1.1f,%1.1f,%1.1f,%s,%s\n", test_copy[i].mDatapoints[0],
+                    test_copy[i].mDatapoints[1], test_copy[i].mDatapoints[2], test_copy[i].mDatapoints[3], test_copy[i].mTestLabel, label);
 
 //            System.out.printf(prediction);
 
@@ -216,14 +213,15 @@ public class KNN {
      * getEuclideanDistance returns the distance between given two points
      * @param inputPoints Double[] representing the sets of input points
      * @param label String representing the label of the input point (known sample from training data)
-     * @param testPoints Double[] representing the sets of testpoints
-     * @param mm MinMax[] represents the minimum and maximum points for the
+     * @param testPoints Double[] representing the sets of test points
+
      * @return Prediction representing the distance and predicted label
      */
-    private static Prediction getEuclideanDistance(double[] inputPoints, String label, double[] testPoints, MinMax[] mm){
+    private static Prediction getEuclideanDistance(double[] inputPoints, String label, double[] testPoints){
         double ans = 0;
         for(int i = 0; i < inputPoints.length; i++){
-            ans = ans + Math.pow(inputPoints[i]- getNormalizedValue(testPoints[i], mm[i].mMin, mm[i].mMax), 2);
+            ans = ans + Math.pow(inputPoints[i] - testPoints[i], 2);
+             //getNormalizedValue(testPoints[i], mm[i].mMin, mm[i].mMax), 2);
         }
 
         Prediction prediction = new Prediction();
@@ -233,31 +231,63 @@ public class KNN {
         return prediction;
     }
 
-    /**
-     * getMinMax determine the minimum and maximum value of from the list
-     * @param data double[] array
-     * @return MinMax representing the minimum and maximum of the given array
-     */
-    private static MinMax getMinMax(double[] data){
-        double min = Double.MAX_VALUE;
-        double max = Double.MIN_VALUE;
-
-        for(double d : data){
-            min = Math.min(d, min);
-            max = Math.max(d, max);
-        }
-
-        return new MinMax(min, max);
-    }
+//    /**
+//     * getMinMax determine the minimum and maximum value of from the list
+//     * @param data double[] array
+//     * @return MinMax representing the minimum and maximum of the given array
+//     */
+//    private static MinMax getMinMax(double[] data){
+//
+//
+//        double min = Double.MAX_VALUE;
+//        double max = Double.MIN_VALUE;
+//
+//        for(double d : data){
+//            min = Math.min(d, min);
+//            max = Math.max(d, max);
+//        }
+//
+//        return new MinMax(min, max);
+//    }
 
     /**
      * getNormalizedValue calculate the normalized value for x
      * @param x Double representing the sample
-     * @param x_min Double representing the minimum value
-     * @param x_max Double representing the maximum value
+     * @param avg Double representing the average value
+     * @param std Double representing the standard deviation value
      * @return Double normalized value
      */
-    private static double getNormalizedValue(double x, double x_min, double x_max){
-        return (x - x_min)/(x_max - x_min);
+    private static double getNormalizedValue(double x, double avg, double std){
+        return (x - avg)/std;
+    }
+
+
+
+    private static StdAvg getStdAvg(double[] data){
+        double avg = getAverage(data);
+        double std = getStandardDeviation(data, avg);
+
+        return new StdAvg(std, avg);
+    }
+
+
+    private static double getStandardDeviation(double[] pts, double avg){
+        double sum = 0;
+        for(double p : pts){
+            sum = sum + Math.pow( p - avg , 2);
+        }
+
+        return Math.sqrt(sum) / (pts.length - 1);
+    }
+
+
+
+    private static double getAverage(double[] pts){
+        double sum = 0;
+        for(double p : pts){
+            sum = sum + p;
+        }
+
+        return sum/pts.length;
     }
 }

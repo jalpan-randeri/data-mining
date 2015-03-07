@@ -26,12 +26,17 @@ public class KMeans {
     public static void main(String[] args) throws IOException {
         Dataset dataset = FileUtils.readFile("input/dataset.txt");
 
+        preprocess(dataset);
         // randomly choose initial centroids
         List<Point> centroids = new ArrayList<Point>();
         centroids.add(dataset.getPoint(27));
         centroids.add(dataset.getPoint(12));
 
         findClusters(dataset, centroids);
+    }
+
+    private static void preprocess(Dataset dataset) {
+
     }
 
     /**
