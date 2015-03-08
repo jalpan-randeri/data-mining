@@ -24,7 +24,6 @@ public class KNN {
 
             int[] k = {1,3,5,7,9};
 
-            //StdAvg[] minMaxes =
             normalizedData(input);
             normalizedData(test);
 
@@ -120,8 +119,6 @@ public class KNN {
 
         Arrays.sort(distances, new PredictorComparator());
 
-//        System.out.println(Arrays.toString(distances));
-
 
         StringBuilder builder = new StringBuilder();
         for (int aK : k) {
@@ -151,8 +148,6 @@ public class KNN {
 
             String prediction  = String.format("%1.1f,%1.1f,%1.1f,%1.1f,%s,%s\n", test_copy[i].mDatapoints[0],
                     test_copy[i].mDatapoints[1], test_copy[i].mDatapoints[2], test_copy[i].mDatapoints[3], test_copy[i].mTestLabel, label);
-
-//            System.out.printf(prediction);
 
             builder.append(prediction);
         }
@@ -221,7 +216,6 @@ public class KNN {
         double ans = 0;
         for(int i = 0; i < inputPoints.length; i++){
             ans = ans + Math.pow(inputPoints[i] - testPoints[i], 2);
-             //getNormalizedValue(testPoints[i], mm[i].mMin, mm[i].mMax), 2);
         }
 
         Prediction prediction = new Prediction();
@@ -230,25 +224,6 @@ public class KNN {
 
         return prediction;
     }
-
-//    /**
-//     * getMinMax determine the minimum and maximum value of from the list
-//     * @param data double[] array
-//     * @return MinMax representing the minimum and maximum of the given array
-//     */
-//    private static MinMax getMinMax(double[] data){
-//
-//
-//        double min = Double.MAX_VALUE;
-//        double max = Double.MIN_VALUE;
-//
-//        for(double d : data){
-//            min = Math.min(d, min);
-//            max = Math.max(d, max);
-//        }
-//
-//        return new MinMax(min, max);
-//    }
 
     /**
      * getNormalizedValue calculate the normalized value for x
@@ -262,7 +237,11 @@ public class KNN {
     }
 
 
-
+    /**
+     * get standard deviation (variance) and average for the given array
+     * @param data Double[] data
+     * @return
+     */
     private static StdAvg getStdAvg(double[] data){
         double avg = getAverage(data);
         double std = getStandardDeviation(data, avg);
@@ -271,6 +250,12 @@ public class KNN {
     }
 
 
+    /**
+     * calculate standard deviation
+     * @param pts double[] list
+     * @param avg double average
+     * @return Double standard deviation
+     */
     private static double getStandardDeviation(double[] pts, double avg){
         double sum = 0;
         for(double p : pts){
@@ -281,7 +266,11 @@ public class KNN {
     }
 
 
-
+    /**
+     * calculate average for the given array
+     * @param pts Double[] data
+     * @return Double : Average
+     */
     private static double getAverage(double[] pts){
         double sum = 0;
         for(double p : pts){

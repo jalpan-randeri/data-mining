@@ -1,23 +1,25 @@
 package model;
 
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by jalpanranderi on 3/4/15.
  */
 public class Dataset {
-    List<Point> data = new ArrayList<Point>();
+    private Instance[] data;
 
-    public void addPoint(double x, double y){
-        data.add(new Point(x, y));
+    public Dataset(Instance[] data) {
+        this.data = data;
     }
 
-    public List<Point> getPoints(){
+    public Instance[] getPoints(){
         return data;
     }
 
-    public Point getPoint(int i){
-        return data.get(i);
+    public Instance getPoint(int i){
+        if(data != null && i < data.length && i >= 0) {
+            return data[i];
+        }else{
+            return null;
+        }
     }
 }
