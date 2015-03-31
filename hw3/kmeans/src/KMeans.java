@@ -26,13 +26,18 @@ import java.util.List;
  */
 public class KMeans {
     private static final int MAX_ITERATION = 50;
-    private static final int MAX_KMEAN_ITERATION = 25;
+    private static final int MAX_TRIAL_ITERATION = 25;
 
 
     public static void main(String[] args) throws IOException {
 
+        if(args.length != 1){
+            System.out.println("Usage KMeans <InputDataset.arff>");
+            System.exit(1);
+        }
 
-        Dataset dataset = FileUtils.readFile("input/segment.arff");
+
+        Dataset dataset = FileUtils.readFile(args[0]);
         int[] random = {775, 1020, 200, 127, 329, 1626, 1515, 651, 658, 328, 1160, 108, 422, 88, 105,
                 261, 212, 1941, 1724, 704, 1469, 635, 867, 1187, 445, 222, 1283, 1288, 1766, 1168, 566, 1812,
                 214, 53, 423, 50, 705, 1284, 1356, 996, 1084, 1956, 254, 711, 1997, 1378, 827, 1875, 424, 1790,
@@ -58,13 +63,13 @@ public class KMeans {
         for (k = 1; k <= 12; k++) {
 
 
-            double[] calculated_sse = new double[MAX_KMEAN_ITERATION];
+            double[] calculated_sse = new double[MAX_TRIAL_ITERATION];
             double sse = 0;
 
             int i;
             int start = 0;
             // randomly choose initial centroids
-            for (int itr = 0; itr < MAX_KMEAN_ITERATION; itr++) {
+            for (int itr = 0; itr < MAX_TRIAL_ITERATION; itr++) {
                 List<Instance> centroids = new ArrayList<Instance>();
 
                 // get random centroids
@@ -79,11 +84,11 @@ public class KMeans {
                 sse = sse + calculated_sse[itr];
             }
 
-            double mean_sse = sse / MAX_KMEAN_ITERATION;
+            double mean_sse = sse / MAX_TRIAL_ITERATION;
             double std_sse = getStandardDeviation(calculated_sse, mean_sse);
             double min_confidence = mean_sse - 2 * std_sse;
             double max_confidence = mean_sse + 2 * std_sse;
-            System.out.printf("%2d\t %.3f\t %.3f\t %.3f\t %.3f\n", k, mean_sse, std_sse, min_confidence, max_confidence);
+            System.out.printf("%2d\t %.3f\t %.3f\t %.3f\n", k, mean_sse, min_confidence, max_confidence);
         }
     }
 
